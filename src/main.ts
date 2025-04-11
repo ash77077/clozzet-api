@@ -14,6 +14,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:4200',
       'https://matrix-resolution.com',
+      'matrix-resolution.com',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
