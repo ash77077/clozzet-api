@@ -10,6 +10,16 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors();
 
+  app.enableCors({
+    origin: [
+      'http://localhost:4200',
+      'https://matrix-resolution.com',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   await app.listen(process.env.PORT || 3000);
 }
+
 bootstrap();
