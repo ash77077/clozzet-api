@@ -9,7 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors();
-
+  app.setGlobalPrefix('api');
   app.enableCors({
     origin: [
       'http://localhost:4200',
