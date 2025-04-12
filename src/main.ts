@@ -12,7 +12,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors({
     origin: [
-      'http://localhost:4200',
+      'http://localhost:4201',
       'https://matrix-resolution.com',
       'matrix-resolution.com',
     ],
