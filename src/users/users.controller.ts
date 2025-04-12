@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
-import mongoose from 'mongoose';
+import * as mangoose from 'mongoose';
 
 @Controller('users')
 export class UsersController {
@@ -13,7 +13,7 @@ export class UsersController {
 
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mangoose.Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid ID format');
     }
     const user = await this.usersService.findById(id);
