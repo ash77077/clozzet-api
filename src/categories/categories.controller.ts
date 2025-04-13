@@ -6,7 +6,9 @@ import {
   Param,
   Put,
   Delete,
-  UploadedFile, UseInterceptors,
+  UploadedFile,
+  UseInterceptors,
+  NotFoundException,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -51,7 +53,11 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
-    return this.categoriesService.remove(id);
+  async remove(@Param('id') id: string): Promise<{ success: boolean }> {
+    const result = await this.categoriesService.remove(id);
+    if (!result) {
+      throw new NotFoundException(`Category with ID ${id} not found`);
+    }
+    return { success: true };
   }
 }

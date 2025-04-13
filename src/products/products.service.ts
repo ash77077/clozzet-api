@@ -33,6 +33,14 @@ export class ProductsService {
     }, {});
   }
 
+  async findByCategory(
+    id: string
+  ): Promise<Product[]> {
+    return this.productModel
+      .find({ _id: id })
+      .exec();
+  }
+
   private toResponseDto(product: Product): ProductResponseDto {
     return {
       id: product.id,

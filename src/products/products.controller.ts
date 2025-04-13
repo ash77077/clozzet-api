@@ -3,7 +3,7 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
-  Body, Get,
+  Body, Get, NotFoundException, Query, Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from '../shared/upload/upload.service';
@@ -22,6 +22,20 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
+  @Get(':id')
+  async getByCategory(
+    @Param('id') id: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    const products = await this.productsService.findByCategory(id);
+    console.log(77777, products);
+    if (!products || products.length === 0) {
+      throw new NotFoundException(`No products found in category ${id}`);
+    }
+    return products;
+  }
+
   @Post('with-image')
   @UseInterceptors(FileInterceptor('image'))
   async createWithImage(
@@ -29,7 +43,6 @@ export class ProductsController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     const imageUrl = await this.uploadService.uploadImage(file);
-    console.log(555, imageUrl);
     return this.productsService.create(
       {
         ...createProductDto,

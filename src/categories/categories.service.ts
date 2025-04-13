@@ -56,8 +56,9 @@ export class CategoriesService {
     return this.toResponseDto(updatedCategory!);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.categoryModel.findOneAndDelete({ id }).exec();
+  async remove(id: string): Promise<boolean> {
+    const result = await this.categoryModel.deleteOne({ _id: id }).exec();
+    return result.deletedCount > 0;
   }
 
   private toResponseDto(category: Category): CategoryResponseDto | null {

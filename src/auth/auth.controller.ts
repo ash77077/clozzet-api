@@ -31,8 +31,6 @@ export class AuthController {
   @Get('me')
   async getProfile(@Req() req) {
     const { username } = req.user;
-    // const { password, salt, id, userId, ...user } = req.user;
-    console.log(await this.userService.findByUsername(username));
     return await this.userService.findByUsername(username);
   }
 }
