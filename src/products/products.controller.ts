@@ -3,7 +3,7 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
-  Body, Get, NotFoundException, Query, Param,
+  Body, Get, NotFoundException, Query, Param, Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from '../shared/upload/upload.service';
@@ -29,7 +29,6 @@ export class ProductsController {
     @Query('limit') limit: number = 10,
   ) {
     const products = await this.productsService.findByCategory(id);
-    console.log(77777, products);
     if (!products || products.length === 0) {
       throw new NotFoundException(`No products found in category ${id}`);
     }
@@ -49,5 +48,14 @@ export class ProductsController {
       },
       imageUrl,
     );
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<{ success: boolean }> {
+    const result = await this.productsService.remove(id);
+    if (!result) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return { success: true };
   }
 }

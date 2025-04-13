@@ -5,11 +5,13 @@ import { Product } from './schemas/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { ProductCategory } from './interfaces/product-category.interface';
+import { Category } from 'src/categories/schemas/category.schema';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
+    @InjectModel(Category.name) private categoryModel: Model<Category>,
   ) {}
 
   async create(createProductDto: CreateProductDto, imageUrl: string): Promise<ProductResponseDto> {
@@ -36,8 +38,12 @@ export class ProductsService {
   async findByCategory(
     id: string
   ): Promise<Product[]> {
+    const category = await this.categoryModel.findById(id).exec();
+    if (!category) {
+      throw new Error('Category not found');
+    }
     return this.productModel
-      .find({ _id: id })
+      .find({ category: category.name }) // or category._id if you're referencing by ID
       .exec();
   }
 
@@ -49,5 +55,10 @@ export class ProductsService {
       category: product.category,
       imageUrl: product.imageUrl,
     };
+  }
+
+  async remove(id: string) {
+    const result = await this.productModel.deleteOne({ _id: id }).exec();
+    return result.deletedCount > 0;
   }
 }
